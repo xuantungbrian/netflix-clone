@@ -6,6 +6,7 @@ import heroTitle from '../../assets/hero_title.png'
 import playIcon from '../../assets/play_icon.png'
 import infoIcon from '../../assets/info_icon.png'
 import TitleCards from '../../components/TitleCards/TitleCards'
+import Footer from '../../components/Footer/Footer'
 
 const Home = () => {
   return (
@@ -20,15 +21,16 @@ const Home = () => {
             <button className='btn'><img src={playIcon} />Play</button>
             <button className='btn dark-btn'><img src={infoIcon} />More Info</button>
           </div>
-          <TitleCards />
+          <TitleCards title="Popular on Netflix"/>
         </div>
       </div>
       <div className='more-cards'>
-        <TitleCards />
-        <TitleCards />
-        <TitleCards />
-        <TitleCards />
+        <TitleCards title="Blockbuster Movie"/>
+        <TitleCards title="Only on Netflix"/>
+        <TitleCards title="Upcoming"/>
+        <TitleCards title="Top Picks for You"/>
       </div>
+      <Footer />
     </div>
   )
 }
