@@ -1,28 +1,50 @@
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './TitleCards.css'
-import cards_data from '../../assets/cards/Cards_data'
+import { Link } from 'react-router-dom'
 
 const TitleCards = ({title, category}) => {
   const cardsRef = useRef();
-
-  const handleWheel = (event) => {
-    event.preventDefault();
-    cardsRef.current.scrollLeft += event.deltaY;
-  }
+  const [apiData, setApiData] = useState([]);
 
   useEffect(() => {
-    cardsRef.current.addEventListener('wheel', handleWheel)
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NTFkZTJlODA4YTg1NjZhNDViMTBlYWU1YmM1OTcxYyIsIm5iZiI6MTczMDM1NTc1Ny41NTgsInN1YiI6IjY3MjMyMjJkMDAzYzRiNWI1YjY0NDNiZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.o7PaNRN7lVEZuseBQWBE63fCnsRa5S8szpQAVKX1K9M'
+      }
+    };
+
+    fetch(`https://api.themoviedb.org/3/movie/${category}?language=en-US&page=1`, options)
+      .then(res => res.json())
+      .then(data => setApiData(data.results))
+      .catch(err => console.error(err));
+  }, [])
+
+  useEffect(() => {
+    const element = cardsRef.current;
+
+    const handleWheel = (event) => {
+      event.preventDefault();
+      element.scrollLeft += event.deltaY;
+    }
+
+    element.addEventListener('wheel', handleWheel)
+
+    return () => {
+      element.removeEventListener('wheel', handleWheel);
+    }
   }, []);
 
   return (
     <div className='title-cards'>
       <h2>{title}</h2>
       <div className='card-list' ref={cardsRef}>
-        {cards_data.map((card, index) => (
-          <div className='card' key={index}>
-            <img src={card.image} alt="" />
-            <p>{card.name}</p>
-          </div>
+        {apiData.map((card, index) => (
+          <Link to={`/player/${card.id}`} key={index} className='card'>
+            <img src={"https://image.tmdb.org/t/p/w500" + card.backdrop_path} alt="" />
+            <p>{card.original_title}</p>
+          </Link>
         ))}
       </div>
     </div>
